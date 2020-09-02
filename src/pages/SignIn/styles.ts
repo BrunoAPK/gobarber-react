@@ -40,6 +40,7 @@ export const CreateAccountButton = styled.TouchableOpacity`
 
   border-top-width: 1px;
   border-top-color: #232129;
+  background: #312e38;
 `;
 
 export const CreateAccountButtonText = styled.Text`
