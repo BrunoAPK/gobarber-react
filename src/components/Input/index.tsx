@@ -1,4 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from 'react';
 import { TextInputProps } from 'react-native';
 import { useField } from '@unform/core';
 
@@ -8,18 +13,32 @@ interface InputProps extends TextInputProps {
   name: string;
   icon: string;
   as?: React.ElementType<TextInputProps>;
+  ref?: React.RefObject<TextInputProps>;
 }
 
 interface InputValueReference {
   value: string;
 }
 
-const Input: React.FC<InputProps> = ({ name, icon, ...rest }) => {
+interface InputRef {
+  focus(): void;
+}
+
+const Input: React.RefForwardingComponent<InputRef, InputProps> = (
+  { name, icon, ...rest },
+  ref,
+) => {
   const inputElementRef = useRef<any>(null);
 
   const { registerField, defaultValue = '', fieldName, error } = useField(name);
   const inputValueRef = useRef<InputValueReference>({ value: defaultValue });
   // executa assim que o elemento for exibido em tela
+  useImperativeHandle(ref, () => ({
+    focus() {
+      inputElementRef.current.focus();
+    },
+  }));
+
   useEffect(() => {
     registerField({
       name: fieldName,
@@ -40,6 +59,7 @@ const Input: React.FC<InputProps> = ({ name, icon, ...rest }) => {
     <Container>
       <Icon name={icon} size={20} color="#666360" />
       <TextInput
+        ref={inputElementRef}
         keyboardAppearance="dark"
         placeholderTextColor="#666360"
         defaultValue={defaultValue}
@@ -52,4 +72,4 @@ const Input: React.FC<InputProps> = ({ name, icon, ...rest }) => {
   );
 };
 
-export default Input;
+export default forwardRef(Input);

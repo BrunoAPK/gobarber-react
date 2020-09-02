@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TextInput,
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
@@ -32,7 +33,7 @@ const SignIn: React.FC = () => {
     console.log(data);
   }, []);
   const formRef = useRef<FormHandles>(null);
-
+  const passwordInputRef = useRef<TextInput>(null);
   return (
     <>
       <KeyboardAvoidingView
@@ -54,8 +55,29 @@ const SignIn: React.FC = () => {
               ref={formRef}
               onSubmit={handleSignIn}
             >
-              <Input name="email" icon="mail" placeholder="E-mail" />
-              <Input name="password" icon="lock" placeholder="Senha" />
+              <Input
+                autoCorrect={false}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                name="email"
+                icon="mail"
+                placeholder="E-mail"
+                returnKeyType="next"
+                onSubmitEditing={() => {
+                  passwordInputRef.current?.focus();
+                }}
+              />
+              <Input
+                ref={passwordInputRef}
+                secureTextEntry
+                name="password"
+                icon="lock"
+                placeholder="Senha"
+                returnKeyType="send"
+                onSubmitEditing={() => {
+                  formRef.current?.submitForm();
+                }}
+              />
               <Button
                 onPress={() => {
                   formRef.current?.submitForm();
