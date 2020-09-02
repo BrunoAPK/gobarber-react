@@ -43,6 +43,7 @@ const SingUp: React.FC = () => {
               <Title>Criar conta</Title>
             </View>
             <Form
+              style={{ width: '100%' }}
               ref={formRef}
               onSubmit={(data) => {
                 console.log(data);
